@@ -5,7 +5,7 @@
 #
 
 #use config;
-require '/var/www/html/carga-perl/config.pm';
+require 'config.pm';
 require 'operacionesdb.pl';
 
 use Text::CSV;
