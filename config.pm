@@ -1,11 +1,14 @@
 #!/usr/bin/perl
 # aptitude install libclass-dbi-pg-perl libtext-csv-perl
-# https://packages.debian.org/sid/amd64/libdbd-oracle-perl/download
+## obviar https://packages.debian.org/sid/amd64/libdbd-oracle-perl/download
+# cpan
+# yes yes
+# >install DBD:Oracle
+# export ORACLE_HOME=/usr/lib/oracle/12.1/client/lib
 # cd /root/.cpan/build/DBD-Oracle-1.74-aCSyJr
 # perl Makefile.PL -V 12.1
 # make
 # make install
-#package config;
 
 use DBI;
 
