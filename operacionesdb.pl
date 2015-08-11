@@ -1,6 +1,6 @@
 
 use Switch;
-require '/var/www/html/carga-perl/config.pm';
+#require '/var/www/html/carga-perl/config.pm';
 
     #### inicio unidad multifamiliar
 sub unidadMultifamiliar($) {

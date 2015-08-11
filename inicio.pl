@@ -22,8 +22,8 @@ my $csv = Text::CSV->new ( { sep_char => ';', binary => 1, auto_diag => 1, } )
                             or die "Cannot use CSV: ".Text::CSV->error_diag ();
 
 my $cont = -1;
-our $id_desarrollo = 4;
-our $usuario_id_creacion = 1;
+our $id_desarrollo = $ARGV[1] or die "Se requiere el id_desarrollo como parametro\n";
+our $usuario_id_creacion = $ARGV[2] or die "Se requiere el usuario_id_creacion como parametro\n";
 our $id_unidad_multifamiliar = 0;
 our $id_vivienda = 0;
 
