@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 # aptitude install libclass-dbi-pg-perl libtext-csv-perl
-## obviar https://packages.debian.org/sid/amd64/libdbd-oracle-perl/download
 # cpan
 # yes yes
 # >install DBD:Oracle
@@ -9,6 +8,7 @@
 # perl Makefile.PL -V 12.1
 # make
 # make install
+# $perl inicio.pl ~/carga_masiva.csv 11 1
 
 use DBI;
 
@@ -43,10 +43,6 @@ $pg_host = '192.168.x.x';
 $pg_db   = 'dbpostgres';
 
 our $pgdb = DBI->connect("DBI:Pg:dbname=$pg_db;host=$pg_host", "$pg_user", "$pg_pass", {'RaiseError' => 1});
-
-
-
-
 
 
 
