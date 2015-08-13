@@ -1,20 +1,18 @@
+# En este archivo se realizan todas las operaciones sobre las bases de datos
+#
+#
 
 use Switch;
-#require '/var/www/html/carga-perl/config.pm';
 
-    #### inicio unidad multifamiliar
+#### inicio unidad multifamiliar
 sub unidadMultifamiliar($) {
       my ($args) = @_;
       my $tipo_inmueble;
-
-      #print "Global: "$campos->{cedula};
-
 
       if    ($args->{tipo_inmueble} eq 'EDIFICIO DE APARTAMENTOS' )  { $tipo_inmueble = 82 }
       elsif ($args->{tipo_inmueble} eq 'CASA' )                      { $tipo_inmueble = 83 }
       elsif ($args->{tipo_inmueble} eq 'PARCELA' )                   { $tipo_inmueble = 84 }
       elsif ($args->{tipo_inmueble} eq 'TERRENO' )                   { $tipo_inmueble = 85 }
-
 
       $sth = $pgdb->prepare("SELECT id_unidad_habitacional FROM unidad_habitacional WHERE nombre = '".$args->{unidad_multifamiliar} ."' AND desarrollo_id = $id_desarrollo" );
       $sth->execute();
@@ -22,7 +20,6 @@ sub unidadMultifamiliar($) {
           if ($rows==0) {
             $multifamiliar = $pgdb->prepare("INSERT INTO unidad_habitacional(nombre,desarrollo_id,gen_tipo_inmueble_id,fuente_datos_entrada_id, estatus, usuario_id_creacion )
                    VALUES ( ?, ?, ?, ?, ?, ? )");
-            #my @persona = Funciones::picapersona( $consulta[8] );
             $multifamiliar->execute( $args->{unidad_multifamiliar}, $id_desarrollo, $tipo_inmueble, 91, 77, $usuario_id_creacion);
             $id_unidad_multifamiliar = $pgdb->last_insert_id("null", "public", unidad_habitacional, id_unidad_habitacional);
           }
@@ -31,10 +28,8 @@ sub unidadMultifamiliar($) {
           }
       }
 
-        my ($number) = @_;
-        #return ($number + 10);
         return $id_unidad_multifamiliar;
-
+        
 }### fin unidad multifamiliar
 
 
