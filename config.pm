@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# aptitude install libclass-dbi-pg-perl libtext-csv-perl
+# aptitude install libclass-dbi-pg-perl libtext-csv-perl libpg-hstore-perl
 # cpan
 # yes yes
 # >install DBD:Oracle
@@ -8,7 +8,9 @@
 # perl Makefile.PL -V 12.1
 # make
 # make install
-# $perl inicio.pl ~/carga_masiva.csv 11 1
+# Ejecucion:
+# $perl inicio.pl archivocsv id_desarrollo id_usuario_creacion id_registro_carga masiva
+# $perl inicio.pl ~/carga_masiva.csv 11 1 75
 
 use DBI;
 
