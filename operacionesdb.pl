@@ -37,38 +37,6 @@ sub unidadFamiliar($) {
       my ($args) = @_;
       my $tipo_inmueble;
 
-      #print "Global: "$campos->{cedula};
-      #print Dumper($args );
-      #print Dumper($args->{campos}{numero_de_vivienda} );
-      #print Dumper($args->{campos} );
-
-      #for($args->{campos}){s/SI/TRUE/g}
-      #print Dumper($args->{campos} );
-      #94
-      #$args->{id_unidad_multifamiliar}
-      #$args->{campos}{area_mt2}
-      #$args->{campos}{numero_de_piso}
-      #$args->{campos}{numero_de_vivienda}
-      #$args->{campos}{sala}      = TRUE;
-      #$args->{campos}{comedor}   = TRUE;
-      #$args->{campos}{lavandero} = TRUE;
-      #$args->{campos}{lindero_norte_vivienda}
-      #$args->{campos}{lindero_sur_vivienda}
-      #$args->{campos}{lindero_este_vivienda}
-      #$args->{campos}{lindero_oeste_vivienda}
-      #$args->{campos}{coordenadas}
-      #$args->{campos}{precio_de_vivienda}
-      #$args->{campos}{puesto_estacionamiento}
-      #$args->{campos}{numero_estacionamiento}
-      #$args->{campos}{numero_de_habitaciones}
-      #$args->{campos}{numero_de_banos}
-      #91
-      #75
-      #$args->{campos}{cocina}  = TRUE;
-      #$args->{campos}{sala}      = TRUE;
-      #$args->{campos}{comedor}   = TRUE;
-      #$args->{campos}{lavandero} = TRUE;
-
       $sala = ($args->{campos}{sala} eq 'SI') ? TRUE : ( ($args->{campos}{sala} eq 'NO') ? FALSE
                       : mensajesCarga( "sala-$linea", "Valor para sala incorrecto en linea $linea" ));
 
@@ -88,10 +56,12 @@ sub unidadFamiliar($) {
       $sth->execute();
       if ($rows = $sth->execute) {
           if ($rows==0) {
-            $multifamiliar = $pgdb->prepare("INSERT INTO vivienda(tipo_vivienda_id,unidad_habitacional_id,construccion_mt2,nro_piso, nro_vivienda, sala, comedor,lavandero,lindero_norte,lindero_sur,lindero_este,lindero_oeste,coordenadas,precio_vivienda,nro_estacionamientos,descripcion_estac,nro_habitaciones,nro_banos,fuente_datos_entrada_id,estatus_vivienda_id,cocina,usuario_id_creacion )
+            $multifamiliar = $pgdb->prepare("INSERT INTO vivienda(tipo_vivienda_id,unidad_habitacional_id,construccion_mt2,nro_piso, nro_vivienda, sala, comedor,lavandero,lindero_norte,lindero_sur,lindero_este,lindero_oeste,coordenadas,precio_vivienda,nro_estacionamientos,descripcion_estac,nro_habitaciones,nro_banos,fuente_datos_entrada_id,estatus_vivienda_id,cocina,porcentaje_vivienda, nro_banos_auxiliar, usuario_id_creacion )
                    VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )");
             #my @persona = Funciones::picapersona( $consulta[8] );
-            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar}, $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,$args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas}, $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina, $usuario_id_creacion);
+            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar}, $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,
+                                    $args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas},
+                                    $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},$args->{campos}{nro_banos_auxiliar} $usuario_id_creacion);
             $id_vivienda = $pgdb->last_insert_id("null", "public", vivienda, id_vivienda);
           }
           else {@unidad_familiar = $sth->fetchrow_array();
