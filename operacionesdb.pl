@@ -57,12 +57,12 @@ sub unidadFamiliar($) {
       if ($rows = $sth->execute) {
           if ($rows==0) {
             $multifamiliar = $pgdb->prepare("INSERT INTO vivienda(tipo_vivienda_id,unidad_habitacional_id,construccion_mt2,nro_piso, nro_vivienda, sala, comedor,lavandero,lindero_norte,lindero_sur,lindero_este,lindero_oeste,coordenadas,precio_vivienda,nro_estacionamientos,descripcion_estac,nro_habitaciones,nro_banos,fuente_datos_entrada_id,estatus_vivienda_id,cocina,porcentaje_vivienda, nro_banos_auxiliar, usuario_id_creacion )
-                   VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )");
+                   VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )");
             #my @persona = Funciones::picapersona( $consulta[8] );
             $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar}, $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,
                                     $args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas},
-                                    $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},$args->{campos}{nro_banos_auxiliar} $usuario_id_creacion);
-            $id_vivienda = $pgdb->last_insert_id("null", "public", vivienda, id_vivienda);
+                                    $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},$args->{campos}{nro_banos_auxiliar}, $usuario_id_creacion);
+            $id_vivienda = $pgdb->last_insert_id("null", "public", "vivienda", "id_vivienda");
           }
           else {@unidad_familiar = $sth->fetchrow_array();
           $id_vivienda=$unidad_familiar[0];
@@ -139,7 +139,7 @@ sub beneficiarioTemporal($) {
       my $beneficiariotemp = $pgdb->prepare("INSERT INTO beneficiario_temporal(persona_id, desarrollo_id, unidad_habitacional_id, vivienda_id, nacionalidad, cedula, nombre_completo, estatus, usuario_id_creacion, carga_masiva_id )
                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
         #my @persona = Funciones::picapersona( $consulta[8] );
-        $beneficiariotemp->execute( $persona_id , $id_desarrollo, $id_unidad_multifamiliar, $id_vivienda, $nacionalidad, $args->{campos}{cedula},$nombre_completo,79, $usuario_id_creacion, $id_carga_masiva);
+        $beneficiariotemp->execute( $persona_id , $id_desarrollo, $id_unidad_multifamiliar, $id_vivienda, $nacionalidad, $args->{campos}{cedula},$nombre_completo,221, $usuario_id_creacion, $id_carga_masiva);
         $id_beneficiario_temporal = $pgdb->last_insert_id("null", "public", beneficiario_temporal, id_beneficiario_temporal);
 
 
