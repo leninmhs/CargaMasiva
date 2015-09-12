@@ -49,9 +49,11 @@ sub unidadFamiliar($) {
       $cocina = ($args->{campos}{cocina} eq 'SI') ? TRUE : ( ($args->{campos}{cocina} eq 'NO') ? FALSE
                       : mensajesCarga( "cocina-$linea", "Valor para cocina incorrecto en linea $linea" ));
 
-      #$usuario_id_creacion
-
-
+      #my $area = $args->{campos}{area_mt2} =~ s/\,/./g;
+      $args->{campos}{area_mt2} =~ s/\,/./g;
+      #print $area;
+    #my  $area = sprintf("%0.2f",$args->{campos}{area_mt2});
+print " area: ".$args->{campos}{area_mt2}."\n";
       $sth = $pgdb->prepare("SELECT id_vivienda FROM vivienda WHERE unidad_habitacional_id = '".$args->{id_unidad_multifamiliar} ."' AND nro_vivienda = '$args->{campos}{numero_de_vivienda}'" );
       $sth->execute();
       if ($rows = $sth->execute) {
@@ -59,7 +61,8 @@ sub unidadFamiliar($) {
             $multifamiliar = $pgdb->prepare("INSERT INTO vivienda(tipo_vivienda_id,unidad_habitacional_id,construccion_mt2,nro_piso, nro_vivienda, sala, comedor,lavandero,lindero_norte,lindero_sur,lindero_este,lindero_oeste,coordenadas,precio_vivienda,nro_estacionamientos,descripcion_estac,nro_habitaciones,nro_banos,fuente_datos_entrada_id,estatus_vivienda_id,cocina,porcentaje_vivienda, nro_banos_auxiliar, usuario_id_creacion )
                    VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )");
             #my @persona = Funciones::picapersona( $consulta[8] );
-            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar}, $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,
+            #$multifamiliar->bind_param(2, ?, { TYPE =>SQL_NUMERIC});
+            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar},  $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,
                                     $args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas},
                                     $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},$args->{campos}{nro_banos_auxiliar}, $usuario_id_creacion);
             $id_vivienda = $pgdb->last_insert_id("null", "public", "vivienda", "id_vivienda");
@@ -112,11 +115,24 @@ sub beneficiarioTemporal($) {
 
         $sexo = ($args->{campos}{sexo} eq 'MASCULINO') ? 2 : 1;
 
-        $persona_oracle = $oradb->prepare("INSERT INTO TABLAS_COMUNES.PERSONA(ID, CEDULA, NACIONALIDAD, PRIMER_NOMBRE, SEGUNDO_NOMBRE, PRIMER_APELLIDO, SEGUNDO_APELLIDO, FECHA_NACIMIENTO, GEN_SEXO_ID, CODIGO_HAB, TELEFONO_HAB, CODIGO_MOVIL, TELEFONO_MOVIL, CORREO_PRINCIPAL )
-               VALUES (?,?, ?, ?, ?, ?, ?, TO_DATE(?,'DD/MM/RR'), ?, ?, ?, ?, ?, ? )");
+
+        if    ($args->{campos}{edo_civil} eq 'CASADO(A)'     )  { $edo_civil = 2 }
+        elsif ($args->{campos}{edo_civil} eq 'DIVORCIADO(A)' )  { $edo_civil = 4 }
+        elsif ($args->{campos}{edo_civil} eq 'SOLTERO(A)' )     { $edo_civil = 1 }
+        elsif ($args->{campos}{edo_civil} eq 'VIUDO(A)' )       { $edo_civil = 3 }
+
+
+        my $cod_tlf_habitacion = "0".substr( $args->{campos}{telefono_habitacion} , 0, 3);
+        my $tlf_habitacion     = substr( $args->{campos}{telefono_habitacion} , 3, 10);
+
+        my $cod_tlf_celular = "0".substr( $args->{campos}{telefono_celular} , 0, 3);
+        my $tlf_celular     = substr( $args->{campos}{telefono_celular} , 3, 10);
+
+        $persona_oracle = $oradb->prepare("INSERT INTO TABLAS_COMUNES.PERSONA(ID, CEDULA, NACIONALIDAD, PRIMER_NOMBRE, SEGUNDO_NOMBRE, PRIMER_APELLIDO, SEGUNDO_APELLIDO, FECHA_NACIMIENTO, GEN_SEXO_ID, GEN_EDO_CIVIL_ID, CODIGO_HAB, TELEFONO_HAB, CODIGO_MOVIL, TELEFONO_MOVIL, CORREO_PRINCIPAL )
+               VALUES (?,?, ?, ?, ?, ?, ?, TO_DATE(?,'DD/MM/RR'), ?, ?, ?, ?, ?, ?, ? )");
         #my @persona = Funciones::picapersona( $consulta[8] );
         #$persona_oracle->execute( 9625808,17845965,1,'KARINA','LISBETH','NIEVES','PARRA',TO_DATE('27/05/85','DD/MM/RR'),1,'0212','6544565','0416','4565434','karinitanieves@gmail.com');
-        $persona_oracle->execute( $id_persona[0],"$saime[2]",$nacionalidad,"$saime[3]","$saime[4]","$saime[5]","$saime[6]","$saime[7]",$sexo,'0212','6544565','0416','4565434', "$args->{campos}{correo_electronico}");
+        $persona_oracle->execute( $id_persona[0],"$saime[2]",$nacionalidad,"$saime[3]","$saime[4]","$saime[5]","$saime[6]","$saime[7]",$sexo,$edo_civil,$cod_tlf_habitacion,$tlf_habitacion,$cod_tlf_celular,$tlf_celular, "$args->{campos}{correo_electronico}");
         my $id_oracle = $oradb->last_insert_id("null", "TABLAS_COMUNES", PERSONA, ID);
         print "ULTIMO ID ORACLE: ".$id_persona[0]."\n";
         #@persona  = $sth->fetchrow_array();
