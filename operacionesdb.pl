@@ -49,11 +49,10 @@ sub unidadFamiliar($) {
       $cocina = ($args->{campos}{cocina} eq 'SI') ? TRUE : ( ($args->{campos}{cocina} eq 'NO') ? FALSE
                       : mensajesCarga( "cocina-$linea", "Valor para cocina incorrecto en linea $linea" ));
 
-      #my $area = $args->{campos}{area_mt2} =~ s/\,/./g;
-      $args->{campos}{area_mt2} =~ s/\,/./g;
-      #print $area;
-    #my  $area = sprintf("%0.2f",$args->{campos}{area_mt2});
-print " area: ".$args->{campos}{area_mt2}."\n";
+      $args->{campos}{area_mt2}            =~ s/\,/./g;
+      $args->{campos}{porcentaje_vivienda} =~ s/\,/./g;
+      $args->{campos}{precio_de_vivienda}  =~ s/\,/./g;
+
       $sth = $pgdb->prepare("SELECT id_vivienda FROM vivienda WHERE unidad_habitacional_id = '".$args->{id_unidad_multifamiliar} ."' AND nro_vivienda = '$args->{campos}{numero_de_vivienda}'" );
       $sth->execute();
       if ($rows = $sth->execute) {
@@ -88,7 +87,6 @@ sub beneficiarioTemporal($) {
         my $sth = $oradb->prepare("SELECT ID, NACIONALIDAD , CEDULA, PRIMER_NOMBRE AS PRIMERNOMBRE
                                 FROM TABLAS_COMUNES.PERSONA WHERE NACIONALIDAD = '$nacionalidad' AND CEDULA = $cedula ");
         $sth->execute();
-        #my ($ID,$nacionalidad,$cedula, $primernombre)  = $sth->fetchrow_array();
         @persona  = $sth->fetchrow_array();
         $sth->finish();
 
@@ -164,6 +162,25 @@ sub beneficiarioTemporal($) {
       return $id_beneficiario_temporal;
 
 }### fin beneficiario temporal
+
+
+
+sub validarExistenciaBeneficiario {
+  my ($args) = @_;
+
+  $sth = $pgdb->prepare("SELECT cedula FROM beneficiario_temporal WHERE cedula = '".$args->{campos}{cedula} ."'" );
+  $sth->execute();
+  if ($rows = $sth->execute) {
+      if ($rows>0) {
+        print "repetido \n";
+        mensajesCarga( "Linea $linea", "Beneficiario ya existe. cedula: $args->{campos}{cedula} $args->{campos}{primer_nombre} $args->{campos}{primer_apellido} " );
+        return "repetido"
+        }
+
+  }
+
+}
+
 
 sub mensajesCarga {
   my ($clave, $valor) = @_;

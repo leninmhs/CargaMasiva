@@ -38,6 +38,8 @@ while (my $campos = $csv->getline_hr( $data )) {
   #mensajesCarga( "info$cont", "inicio el recorrido del archivo de la carga masiva N° $id_carga_masiva" );
 
 #print Dumper($campos);
+
+if ( validarExistenciaBeneficiario( { campos => $campos } ) ne 'repetido'){
   $id_unidad_multifamiliar = unidadMultifamiliar( { unidad_multifamiliar =>
                 $campos->{nombre_unidad_multifamiliar}, tipo_inmueble => $campos->{tipo_inmueble} });
 
@@ -49,6 +51,7 @@ while (my $campos = $csv->getline_hr( $data )) {
                                     id_vivienda => $id_vivienda, campos => $campos });
 
   print "\nMultifamiliar: ".$id_unidad_multifamiliar." Vivienda:".$id_vivienda." Cedula: ".$campos->{cedula}." ID Oracle: ".$persona[0]." Cedula Oracle: ".$persona[2]." id_beneficiario_temporal: $id_beneficiario_temporal \n";
+}#fin si el Beneficiario no es repetido
 
 } ### Fin recorrido del CSV
 
