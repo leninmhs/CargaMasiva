@@ -18,9 +18,9 @@ sub unidadMultifamiliar($) {
       $sth->execute();
       if ($rows = $sth->execute) {
           if ($rows==0) {
-            $multifamiliar = $pgdb->prepare("INSERT INTO unidad_habitacional(nombre,desarrollo_id,gen_tipo_inmueble_id,fuente_datos_entrada_id, estatus, usuario_id_creacion )
-                   VALUES ( ?, ?, ?, ?, ?, ? )");
-            $multifamiliar->execute( $args->{unidad_multifamiliar}, $id_desarrollo, $tipo_inmueble, 91, 77, $usuario_id_creacion);
+            $multifamiliar = $pgdb->prepare("INSERT INTO unidad_habitacional(nombre,desarrollo_id,gen_tipo_inmueble_id,fuente_datos_entrada_id, estatus,lindero_norte, lindero_sur, lindero_este, lindero_oeste, usuario_id_creacion )
+                   VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+            $multifamiliar->execute( $args->{unidad_multifamiliar}, $id_desarrollo, $tipo_inmueble, 91, 77, $args->{campos}{lindero_norte_multifamiliar}, $args->{campos}{lindero_sur_multifamiliar},$args->{campos}{lindero_este_multifamiliar},$args->{campos}{lindero_oeste_multifamiliar},$usuario_id_creacion);
             $id_unidad_multifamiliar = $pgdb->last_insert_id("null", "public", unidad_habitacional, id_unidad_habitacional);
           }
           else {@unidad_multifamiliar = $sth->fetchrow_array();
@@ -58,13 +58,15 @@ sub unidadFamiliar($) {
       if ($rows = $sth->execute) {
           if ($rows==0) {
             $multifamiliar = $pgdb->prepare("INSERT INTO vivienda(tipo_vivienda_id,unidad_habitacional_id,construccion_mt2,nro_piso, nro_vivienda, sala, comedor,lavandero,lindero_norte,lindero_sur,lindero_este,lindero_oeste,coordenadas,precio_vivienda,nro_estacionamientos,descripcion_estac,nro_habitaciones,nro_banos,fuente_datos_entrada_id,estatus_vivienda_id,cocina,porcentaje_vivienda, nro_banos_auxiliar, usuario_id_creacion )
-                   VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )");
-            #my @persona = Funciones::picapersona( $consulta[8] );
-            #$multifamiliar->bind_param(2, ?, { TYPE =>SQL_NUMERIC});
-            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar},  $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso}, $args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero,
-                                    $args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas},
-                                    $args->{campos}{precio_de_vivienda},$args->{campos}{puesto_estacionamiento},$args->{campos}{numero_estacionamiento},$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},$args->{campos}{nro_banos_auxiliar}, $usuario_id_creacion);
+                   VALUES ( ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )") or die( $DBI::errstr . "\n" );
+
+            $multifamiliar->execute( 94, $args->{id_unidad_multifamiliar}, $args->{campos}{area_mt2}, $args->{campos}{numero_de_piso},
+$args->{campos}{numero_de_vivienda}, $sala, $comedor, $lavandero, $args->{campos}{lindero_norte_vivienda},$args->{campos}{lindero_sur_vivienda},$args->{campos}{lindero_este_vivienda},$args->{campos}{lindero_oeste_vivienda},$args->{campos}{coordenadas},                                 $args->{campos}{precio_de_vivienda},$args->{campos}{numero_estacionamiento},$args->{campos}{puesto_estacionamiento},
+$args->{campos}{numero_de_habitaciones},$args->{campos}{numero_de_banos},91,75, $cocina,$args->{campos}{porcentaje_vivienda},
+$args->{campos}{nro_banos_auxiliar}, $usuario_id_creacion) or die( $DBI::errstr . "\n" );
+
             $id_vivienda = $pgdb->last_insert_id("null", "public", "vivienda", "id_vivienda");
+
           }
           else {@unidad_familiar = $sth->fetchrow_array();
           $id_vivienda=$unidad_familiar[0];
