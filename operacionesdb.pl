@@ -97,16 +97,13 @@ sub beneficiarioTemporal($) {
       my $ID = $persona[0];
       if( $ID eq ''){
 
-        $sth = $oradb->prepare("SELECT ID, NACIONALIDAD, CEDULA, PRIMERNOMBRE, SEGUNDONOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO, TO_DATE(FECHANACIMIENTO, 'DD-MM-YYYY' ) As FECHANACIMIENTO,2 AS PROCEDENCIA
-                                FROM ORGANISMOS_PUBLICOS.SAIME_ORIGINAL
-                                WHERE NACIONALIDAD ='$args->{campos}{nacionalidad}' AND CEDULA = $cedula ");
+        $sth = $oradb->prepare("SELECT ID, NAC, CEDULA, PRIMERNOMBRE, SEGUNDONOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO, TO_DATE(FECHA, 'YYYY-MM-DD' ) As FECHANACIMIENTO,2 AS PROCEDENCIA
+                                FROM ORGANISMOS_PUBLICOS.ONIDEX
+                                WHERE NAC ='$args->{campos}{nacionalidad}' AND CEDULA = $cedula ");
         $sth->execute();
         #my ($ID,$nacionalidad,$cedula, $primernombre)  = $sth->fetchrow_array();
         @saime  = $sth->fetchrow_array();
 
-
-        #INSERT INTO TABLAS_COMUNES.PERSONA (ID, CEDULA,NACIONALIDAD,PRIMER_NOMBRE,SEGUNDO_NOMBRE,PRIMER_APELLIDO,SEGUNDO_APELLIDO,FECHA_NACIMIENTO,GEN_SEXO_ID,CODIGO_HAB,TELEFONO_HAB,CODIGO_MOVIL,TELEFONO_MOVIL,CORREO_PRINCIPAL)
-        #VALUES ((SELECT MAX(ID)+1 FROM TABLAS_COMUNES.PERSONA),17845965,1,'KARINA','LISBETH','NIEVES','PARRA',to_date('28-MAY-85','DD/MM/RR'),1,0212,6544565,0416,4565434,'karinitanieves@gmail.com')
         ### Sacar ultimo ID en PERSONA
         $sth = $oradb->prepare("SELECT MAX(ID)+1 FROM TABLAS_COMUNES.PERSONA");
         $sth->execute();
