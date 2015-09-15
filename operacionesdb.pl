@@ -99,7 +99,7 @@ sub beneficiarioTemporal($) {
 
         $sth = $oradb->prepare("SELECT ID, NAC, CEDULA, PRIMERNOMBRE, SEGUNDONOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO, TO_DATE(FECHA, 'YYYY-MM-DD' ) As FECHANACIMIENTO,2 AS PROCEDENCIA
                                 FROM ORGANISMOS_PUBLICOS.ONIDEX
-                                WHERE NAC ='$args->{campos}{nacionalidad}' AND CEDULA = $cedula ");
+                                WHERE NAC ='$args->{campos}{nacionalidad}' AND CEDULA = '$cedula' ");
         $sth->execute();
         #my ($ID,$nacionalidad,$cedula, $primernombre)  = $sth->fetchrow_array();
         @saime  = $sth->fetchrow_array();
